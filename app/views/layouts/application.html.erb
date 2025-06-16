@@ -23,6 +23,38 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="bg-white shadow">
+      <nav class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <%= link_to "コトバのタネ", root_path, class: "text-xl font-bold text-gray-800" %>
+          <div class="flex items-center space-x-4">
+            <% if parent_signed_in? %>
+              <%= link_to "ダッシュボード", parent_dashboard_path, class: "text-gray-600 hover:text-gray-900" %>
+              <%= button_to "ログアウト", destroy_parent_session_path, method: :delete, data: { turbo: false }, class: "text-gray-600 hover:text-gray-900" %>
+            <% elsif child_signed_in? %>
+              <%= link_to "ダッシュボード", child_dashboard_path, class: "text-gray-600 hover:text-gray-900" %>
+              <%= button_to "ログアウト", children_session_path, method: :delete, data: { turbo: false }, class: "text-gray-600 hover:text-gray-900" %>
+            <% else %>
+              <%= link_to "保護者ログイン", new_parent_session_path, class: "text-gray-600 hover:text-gray-900" %>
+              <%= link_to "子どもログイン", new_children_session_path, class: "text-gray-600 hover:text-gray-900" %>
+            <% end %>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+      <% if notice %>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <%= notice %>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <%= alert %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </main>
   </body>
 </html>
