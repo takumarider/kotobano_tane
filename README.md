@@ -122,8 +122,9 @@ DB：MySQL
 セッション管理：Railsセッション（子ども）
 
 ##ローカルでの動作方法
-git clone https://github.com/yourusername/child_login_app.git
-cd child_login_app
+git clone https://github.com/yourusername/kotobano_tane.git
+cd kotobano_tane
+brew services start mysql
 rails db:create
 rails db:migrate
 rails s
