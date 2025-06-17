@@ -4,5 +4,18 @@ class Child < ApplicationRecord
 
   validates :name, presence: true
   validates :birthday, presence: true
-  validates :age, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  def age
+    return nil unless birthday.present?  # birthdayがなければnilを返す
+
+    today = Date.today
+    age = today.year - birthday.year
+
+    # 今年の誕生日がまだ来ていなければ1歳引く
+    if today < birthday + age.years
+      age -= 1
+    end
+
+    age
+  end
 end

@@ -1,71 +1,34 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-2xl font-bold mb-6">コメントを書く</h1>
+<h1>コメントを投稿する</h1>
 
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-2"><%= @memo.title %></h2>
-      <p class="text-gray-600 mb-2">カテゴリ: <%= @memo.category %></p>
-      <p class="text-gray-700"><%= @memo.body %></p>
-    </div>
-
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h3 class="text-lg font-semibold mb-4">コメントテンプレート</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <% CommentTemplate::TEMPLATE_TYPES.each do |key, template| %>
-          <button type="button" 
-                  class="template-btn px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  data-template-title="<%= template[:title] %>"
-                  data-template-content="<%= template[:content] %>">
-            <%= template[:title] %>
-          </button>
-        <% end %>
-      </div>
-    </div>
-
-    <%= form_with(model: [@memo, @comment], local: true, class: "bg-white rounded-lg shadow-md p-6") do |f| %>
-      <% if @comment.errors.any? %>
-        <div class="bg-red-50 text-red-500 p-4 rounded-lg mb-6">
-          <h2 class="text-lg font-semibold mb-2">
-            <%= @comment.errors.count %>件のエラーがあります：
-          </h2>
-          <ul class="list-disc list-inside">
-            <% @comment.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <div class="mb-6">
-        <%= f.label :body, "コメント", class: "block text-sm font-medium text-gray-700 mb-2" %>
-        <%= f.text_area :body, rows: 4, class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
-      </div>
-
-      <div class="flex justify-end space-x-4">
-        <%= link_to "キャンセル", parent_dashboard_path, class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" %>
-        <%= f.submit "コメントを投稿", class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      </div>
-    <% end %>
+<div class="memo-detail-table mb-4">
+  <div class="memo-row">
+    <div class="memo-label">対象のタイトル</div>
+    <div class="memo-value"><%= @memo.title.presence || "（タイトルなし）" %></div>
   </div>
+  <% if @memo.content.present? %>
+    <div class="memo-row">
+      <div class="memo-label">メモ内容</div>
+      <div class="memo-value"><%= simple_format(@memo.content) %></div>
+    </div>
+  <% end %>
+
+<h3>テンプレート一覧</h3>
+<div id="template-list" class="mb-3">
+  <% @templates.each do |template| %>
+    <button type="button" class="btn btn-outline-secondary m-1 template-btn" data-content="<%= template.content %>">
+      <%= template.content.to_s %>
+    </button>
+  <% end %>
 </div>
 
-<% content_for :head do %>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const templateButtons = document.querySelectorAll('.template-btn');
-      const commentTextarea = document.querySelector('textarea[name="comment[body]"]');
+<%= form_with(model: [@child, @memo, @comment], local: true) do |f| %>
+  <div class="form-group">
+    <%= f.label :content, "コメント内容" %><br>
+    <%= f.text_area :content, rows: 5, class: "form-control", id: "comment_content", placeholder: "コメントを入力してください" %>
+  </div>
 
-      templateButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const title = this.dataset.templateTitle;
-          const content = this.dataset.templateContent;
-          
-          // メモの内容に基づいてテンプレートをカスタマイズ
-          const customizedContent = content.replace('〇〇', '<%= @memo.title %>');
-          
-          commentTextarea.value = customizedContent;
-        });
-      });
-    });
-  </script>
+  <div class="form-group mt-3">
+    <%= f.submit "投稿する", class: "btn btn-primary" %>
+    <%= link_to "戻る", parent_dashboard_path, class: "btn btn-secondary ml-2" %>
+  </div>
 <% end %>

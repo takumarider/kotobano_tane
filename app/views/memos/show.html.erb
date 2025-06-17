@@ -1,54 +1,64 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <h1 class="text-2xl font-bold mb-2"><%= @memo.title %></h1>
-          <p class="text-gray-600">カテゴリ: <%= @memo.category %></p>
-        </div>
-        <div class="space-x-2">
-          <%= link_to '編集', edit_child_memo_path(current_child, @memo), class: 'text-blue-500 hover:text-blue-700' %>
-          <%= button_to '削除', child_memo_path(current_child, @memo), method: :delete, class: 'text-red-500 hover:text-red-700', data: { confirm: '本当に削除しますか？' } %>
-        </div>
-      </div>
+ <div class="memo-detail-wrapper">
+  <h1>ふりかえり</h1>
 
-      <div class="prose max-w-none mb-6">
-        <%= simple_format(@memo.body) %>
-      </div>
-
-      <% if @memo.images.attached? %>
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <% @memo.images.each do |image| %>
-            <div class="relative">
-              <%= image_tag image, class: 'w-full h-48 object-cover rounded' %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <div class="text-sm text-gray-500">
-        作成日時: <%= l @memo.created_at, format: :long %>
-      </div>
+  <div class="memo-detail-table">
+    <div class="memo-row">
+      <div class="memo-label">タイトル</div>
+      <div class="memo-value"><%= @memo.title.presence || "（なし）" %></div>
     </div>
-
-    <% if @memo.comments.any? %>
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">保護者からのコメント</h2>
-        <div class="space-y-4">
-          <% @memo.comments.each do |comment| %>
-            <div class="bg-gray-50 rounded p-4">
-              <p class="text-gray-700"><%= simple_format(comment.body) %></p>
-              <p class="text-sm text-gray-500 mt-2">
-                <%= l comment.created_at, format: :long %>
-              </p>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
-    <div class="mt-6">
-      <%= link_to 'メモ一覧に戻る', child_memos_path(current_child), class: 'text-blue-500 hover:text-blue-700' %>
+    <div class="memo-row">
+      <div class="memo-label">カテゴリー</div>
+      <div class="memo-value"><%= @memo.category&.name.presence || "（未設定）" %></div>
+    </div>
+    <div class="memo-row">
+      <div class="memo-label">コメント</div>
+      <div class="memo-value"><%= @memo.content %></div>
     </div>
   </div>
-</div> 
+
+  <% if @memo.images.attached? %>
+    <h3>写真（<%= @memo.images.count %>枚）</h3>
+    <div class="memo-images">
+      <% @memo.images.each do |image| %>
+        <div class="image-item">
+          <%= image_tag image.variant(resize_to_limit: [300, 300]) %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="edit-delete-wrapper">
+    <%= link_to "やりなおし↪️", edit_child_memo_path(@child, @memo), class: "link-button" %>
+    <%= link_to "ゴミ箱🗑️", child_memo_path(@child, @memo), data: { turbo_method: :delete, confirm: "本当に削除しますか？" }, class: "link-delete-button" %>
+    <%= link_to "ダッシュボードにもどる💨", child_memos_path(@child), class: "btn btn-primary" %>
+  </div>
+</div>
+
+<hr>
+
+<h3>おうちの人からのひとこと</h3>
+<% if @memo.comments.any? %>
+  <% @memo.comments.each do |comment| %>
+    <div class="comment" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+      <p>
+        <%= comment.content %>
+      </p>
+      <p><small><%= comment.created_at.strftime("%Y/%m/%d %H:%M") %></small></p>
+    </div>
+  <% end %>
+<% else %>
+  <p>コメントはまだありません。</p>
+<% end %>
+
+<% if parent_signed_in? %>
+  <hr>
+  <h4>コメントを投稿する</h4>
+  <%= form_with(model: [@memo.child, @memo, Comment.new], local: true) do |f| %>
+    <div>
+      <%= f.text_area :content, rows: 3, placeholder: "コメントを入力してください", class: "form-control" %>
+    </div>
+    <div style="margin-top: 10px;">
+      <%= f.submit "投稿", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>

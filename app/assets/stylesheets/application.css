@@ -1,10 +1,320 @@
+
+
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.btn-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+.btn-secondary {
+  background-color: #2196F3;
+  color: white;
+}
+
+
+header {
+  background-color: #8B4513; /* 茶色（サドルブラウン） */
+  padding: 10px;
+  color: white;
+}
+
+header nav a {
+  color: white; /* ボタンの文字色が白になるように */
+}
+
+body {
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-size: 18px; /* デフォルトより少し大きく */
+  line-height: 1.6; /* 行間も広げて読みやすく */
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+
+small {
+  color: gray;
+}
+
+h1, h2, h3 {
+  font-weight: 1000; /* 見出しは少し太め */
+  margin-bottom: 10px;
+}
+
+p, li {
+  font-size: 30px;
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 30%;
+  margin-top: 30px;
+}
+
+ul li {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+
+ul li h2 {
+  margin: 0 0 10px 0;
+  color: #495057;
+}
+
+ul li p {
+  color: #212529;
+  margin: 0;
+}
+
+/* ヘッダー全体のデザイン */
+.header-wrapper {
+  background-color: #8B4513; /* 茶色 */
+  padding: 20px 0;
+  color: white;
+  text-align: center;
+}
+/* ヘッダー内のログイン状態テキスト（ボタン風） */
+.login-status {
+  display: inline-block;
+  background-color: #6e3510; /* 濃いめの茶色 */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-right: 10px; /* 他のボタンと少し間隔を空ける */
+}
+
+
+/* ヘッダー内リンクの色補正（リンクの白色維持） */
+.header-wrapper a {
+  color: white;
+  text-decoration: none;
+}
+
+
+/* memo */
+
+.memo-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* カード間の隙間 */
+  padding: 0;
+  margin: 30px auto;
+  list-style: none;
+}
+
+.memo-card {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.category-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.memo-detail-wrapper {
+  text-align: center;
+  margin: 30px auto;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.memo-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.image-item {
+  margin: 10px;
+}
+
+/* メモ詳細画面CSS*/
+.memo-detail-wrapper {
+  max-width: 700px;
+  margin: 30px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.memo-detail-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.memo-row {
+  display: table-row;
+  border-bottom: 1px solid #ccc;
+}
+
+.memo-label,
+.memo-value {
+  display: table-cell;
+  padding: 15px;
+  vertical-align: top;
+  font-size: 20px;
+}
+
+.memo-label {
+  font-weight: bold;
+  width: 30%;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.memo-value {
+  background-color: #fff;
+}
+
+.memo-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.image-item img {
+  max-width: 250px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* app/assets/stylesheets/application.css または .scss に追加 */
+.custom-error-message {
+  background-color: #ffe6e6;
+  border: 2px solid red;
+  color: #a80000;
+  font-weight: bold;
+  padding: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+
+
+.button-container {
+  text-align: center;
+  font-size: large;
+}
+
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+
+.form-input {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+
+.form-input input,
+.form-input textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+
+.link-button {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.link-delete-button {
+  display: inline-block;
+  background-color: #cc361f;
+  font-size: 17px;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  margin-left: 10px;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.edit-delete-wrapper {
+  display: flex;
+  margin-top: 10px;
+}
+
+.category-button {
+  margin: 5px;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  color: #333;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+
+
+.category-button.selected {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0a58ca;
+}
+
+.category-button.selected {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.login-button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* ボタン同士の間隔 */
+  margin: auto;
+  margin-top: 50px;
+}
+
+
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ *= require_self
  */

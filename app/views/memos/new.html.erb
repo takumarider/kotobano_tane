@@ -1,11 +1,6 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">新しいメモを書く</h1>
+<h1>メモろう🗒️</h1>
 
-    <%= render 'form', memo: @memo %>
+<%= render 'form' %>
 
-    <div class="mt-8">
-      <%= link_to "戻る", child_memos_path(current_child), class: "text-blue-500 hover:text-blue-700" %>
-    </div>
-  </div>
-</div>
+ <%= link_to "ダッシュボードにもどる💨", child_memos_path(@child), class: "btn btn-primary" %>
+
