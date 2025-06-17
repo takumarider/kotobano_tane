@@ -78,28 +78,24 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      # ✅ テスト用データベースを作成
       - name: Create test database
         run: bin/rails db:create
         env:
           RAILS_ENV: test
           DATABASE_URL: mysql2://127.0.0.1:3306
 
-      # ✅ マイグレーションを実行
       - name: Run migrations
         run: bin/rails db:migrate
         env:
           RAILS_ENV: test
           DATABASE_URL: mysql2://127.0.0.1:3306
 
-      # ✅ テスト実行
       - name: Run tests
         env:
           RAILS_ENV: test
           DATABASE_URL: mysql2://127.0.0.1:3306
-        run: bin/rails test test:system
+        run: bundle exec rspec --format documentation
 
-      # テスト失敗時のスクリーンショット保存
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
         if: failure()
