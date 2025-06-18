@@ -20,11 +20,12 @@
   <% @memos.each do |memo| %>
     <li class="memo-card">
       <strong><%= memo.title.presence || "（タイトルなし）" %></strong><br>
-      <%= link_to memo.content.truncate(20), child_memo_path(@child, memo) %><br>
+
+      <%= link_to memo.body.truncate(20), child_memo_path(@child, memo) %><br>
 
       <% if memo.images.attached? %>
         <%= image_tag memo.images.first.variant(resize_to_limit: [200, 200]) %><br>
-        <% end %>
+      <% end %>
 
       <% if memo.category.present? %>
         <p><%= memo.category.name %></p>

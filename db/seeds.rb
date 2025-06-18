@@ -1,17 +1,24 @@
+# カテゴリーの作成（重複防止のため find_or_create_by を使用）
+categories = [
+  "日記",
+  "学んだことをまとめよう",
+  "今の気持ちはどう？",
+  "ひらめいた！！"
+]
 
+categories.each do |name|
+  Category.find_or_create_by!(name: name)
+end
 
-# CommentTemplate登録
+# 親ユーザーを取得または作成
+parent = Parent.find_or_create_by!(email: 'parent@example.com') do |p|
+  p.password = 'password'
+end
+
+# コメントテンプレート作成
 CommentTemplate.create!([
-  { content: "とてもよくできました！" },
-  { content: "あと少し！がんばりましょう！" },
-  { content: "君にしかできないことだ！" },
-  { content: "調べたことをそのままAIに聞いてみて。もっと教えてくれるよ" }
-])
-
-# Category登録
-categories = Category.create!([
-  { name: "日記" },
-  { name: "学んだことをまとめよう" },
-  { name: "今の気持ちはどう？" },
-  { name: "ひらめいた！！" }
+  { title: "褒める", content: "とてもよくできました！", parent: parent },
+  { title: "励ます", content: "あと少し！がんばりましょう！", parent: parent },
+  { title: "応援する", content: "君にしかできないことだ！", parent: parent },
+  { title: "提案する", content: "調べたことをそのままAIに聞いてみて。もっと教えてくれるよ", parent: parent }
 ])

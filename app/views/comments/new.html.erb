@@ -5,17 +5,22 @@
     <div class="memo-label">対象のタイトル</div>
     <div class="memo-value"><%= @memo.title.presence || "（タイトルなし）" %></div>
   </div>
-  <% if @memo.content.present? %>
+
+  <% if @memo.body.present? %>
     <div class="memo-row">
       <div class="memo-label">メモ内容</div>
-      <div class="memo-value"><%= simple_format(@memo.content) %></div>
+      <div class="memo-value"><%= simple_format(@memo.body) %></div>
     </div>
   <% end %>
+</div>
 
 <h3>テンプレート一覧</h3>
 <div id="template-list" class="mb-3">
   <% @templates.each do |template| %>
-    <button type="button" class="btn btn-outline-secondary m-1 template-btn" data-content="<%= template.content %>">
+    <button
+      type="button"
+      class="btn btn-outline-secondary m-1 template-btn"
+      data-content="<%= h(template.content) %>">
       <%= template.content.to_s %>
     </button>
   <% end %>
@@ -23,8 +28,8 @@
 
 <%= form_with(model: [@child, @memo, @comment], local: true) do |f| %>
   <div class="form-group">
-    <%= f.label :content, "コメント内容" %><br>
-    <%= f.text_area :content, rows: 5, class: "form-control", id: "comment_content", placeholder: "コメントを入力してください" %>
+    <%= f.label :body, "コメント内容" %><br>
+    <%= f.text_area :body, rows: 5, class: "form-control", id: "comment_body", placeholder: "コメントを入力してください" %>
   </div>
 
   <div class="form-group mt-3">

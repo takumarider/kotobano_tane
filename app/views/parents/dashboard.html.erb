@@ -12,7 +12,7 @@
               <strong>タイトル：</strong> <%= memo.title.presence || "（タイトルなし）" %><br>
               <strong>カテゴリー：</strong> <%= memo.category&.name.presence || "（なし）" %><br>
               <strong>内容：</strong><br>
-              <%= simple_format(memo.content) %><br>
+              <%= simple_format(memo.body) %><br>
               <small class="text-muted">投稿日：<%= memo.created_at.strftime("%Y/%m/%d") %></small>
             </p>
 
@@ -33,7 +33,7 @@
             <% if comment.present? %>
               <div class="mt-3">
                 <p class="text-success">
-                  <strong>コメント済：</strong>「<%= truncate(comment.content, length: 30) %>」
+                  <strong>コメント済：</strong>「<%= truncate(comment.body, length: 30) %>」
                 </p>
               </div>
             <% else %>

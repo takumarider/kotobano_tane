@@ -6,16 +6,11 @@ class Child < ApplicationRecord
   validates :birthday, presence: true
 
   def age
-    return nil unless birthday.present?  # birthdayがなければnilを返す
+    return nil unless birthday.present?
 
     today = Date.today
     age = today.year - birthday.year
-
-    # 今年の誕生日がまだ来ていなければ1歳引く
-    if today < birthday + age.years
-      age -= 1
-    end
-
+    age -= 1 if today < birthday + age.years
     age
   end
 end

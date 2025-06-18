@@ -1,13 +1,14 @@
-document.addEventListener("turbo:load", function() { // DOMContentLoaded を turbo:load に変更
-  const templateButtons = document.querySelectorAll(".template-btn");
-  const commentField = document.getElementById("comment_content");
+document.addEventListener('turbo:load', () => {
+  const buttons = document.querySelectorAll('.template-btn');
+  const textarea = document.getElementById('comment_body'); // 修正済みのID
 
-  templateButtons.forEach(button => {
-    button.addEventListener("click", function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      commentField.value = this.dataset.content;
-      commentField.focus();
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.dataset.content;
+      if (textarea) {
+        textarea.value = content;
+        textarea.focus();
+      }
     });
   });
 });

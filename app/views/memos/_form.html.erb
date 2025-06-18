@@ -17,24 +17,23 @@
     </div>
 
     <div class="form-input">
-      <label>カテゴリー</label><br>
-      <div class="category-button-group" style="text-align: center;">
-        <% Category.all.each do |category| %>
-          <button type="button"
-                  class="btn btn-secondary category-button"
-                  data-category-id="<%= category.id %>">
-            <%= category.name %>
-          </button>
-        <% end %>
-      </div>
-      <%= form.hidden_field :category_id, id: "selected-category" %>
-    </div>
+  <label>カテゴリー</label><br>
+  <div class="category-button-group" style="text-align: center;">
+    <% Category.all.each do |category| %>
+      <button type="button"
+              class="btn btn-secondary category-button <%= 'selected' if category.id == @memo.category_id %>"
+              data-category-id="<%= category.id %>">
+        <%= category.name %>
+      </button>
+    <% end %>
+  </div>
+  <%= form.hidden_field :category_id, id: "selected-category", value: @memo.category_id %>
+</div>
 
     <div class="form-input">
-    <%= form.label :body, 'コメント' %><br>
-    <%= form.text_area :body %>
+      <%= form.label :body, 'コメント' %><br>
+      <%= form.text_area :body %>
     </div>
-
 
     <div class="form-input">
       <%= form.label :images, "写真" %><br>

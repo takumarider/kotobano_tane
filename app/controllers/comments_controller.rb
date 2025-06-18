@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
   before_action :set_child_and_memo
 
   def new
+    @child = Child.find(params[:child_id])
+    @memo = @child.memos.find(params[:memo_id])
     @comment = Comment.new
     @templates = CommentTemplate.all
   end
@@ -26,6 +28,6 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:content)
+    params.require(:comment).permit(:body)
   end
 end
