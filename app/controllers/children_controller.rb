@@ -1,43 +1,52 @@
 class ChildrenController < ApplicationController
-  before_action :authenticate_child!
-  before_action :set_child, only: [ :show, :edit, :update ]
+  before_action :authenticate_parent!, except: [ :dashboard ]
+  before_action :require_child_login, only: [ :dashboard ]
+  before_action :set_parent, except: [ :dashboard ]
+
+  def index
+    @children = @parent.children
+  end
+
+  def new
+    @child = @parent.children.new
+  end
+
+  def create
+    @child = @parent.children.new(child_params)
+    if @child.save
+      redirect_to parent_path(@parent), notice: "子どもを登録しました"
+    else
+      render :new
+    end
+  end
+
+  def destroy
+    @child = @parent.children.find(params[:id])
+    @child.destroy
+    redirect_to parent_path(@parent), notice: "子どもを削除しました"
+  end
 
   def dashboard
-    @memos = current_child.memos.order(created_at: :desc)
-  end
-
-  def show
-    @memos = @child.memos.order(created_at: :desc)
-  end
-
-  def edit
-  end
-
-  def update
-    if @child.update(child_params)
-      redirect_to child_dashboard_path, notice: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F\u3002"
-    else
-      render :edit
+    @child = Child.find_by(id: session[:child_id])
+    unless @child
+      reset_session
+      redirect_to new_child_sessions_path, alert: "ログインしてください"
     end
   end
 
   private
 
-  def set_child
-    @child = current_child
+  def set_parent
+    @parent = current_parent
   end
 
   def child_params
-    params.require(:child).permit(:name, :birthday)
+    params.require(:child).permit(:name, :birthday, :age)
   end
 
-  def calculate_age(birthday)
-    return nil unless birthday.present?
-
-    birth_date = Date.parse(birthday)
-    today = Date.today
-    age = today.year - birth_date.year
-    age -= 1 if today < birth_date.change(year: today.year)
-    age
+  def require_child_login
+    unless session[:child_id] && Child.exists?(session[:child_id])
+      redirect_to new_child_sessions_path, alert: "ログインしてください"
+    end
   end
 end

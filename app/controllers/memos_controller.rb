@@ -1,38 +1,36 @@
+# app/controllers/memos_controller.rb
+
 class MemosController < ApplicationController
-  before_action :authenticate_child!
-  before_action :set_memo, only: [ :edit, :update, :destroy, :delete_image ]
+  before_action :set_memo, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_child
+  before_action :authenticate_child_or_parent!
 
   def index
-    @memos = current_child.memos.order(created_at: :desc)
-    @memos = @memos.search(params[:query]) if params[:query].present?
-    @memos = @memos.by_category(params[:category]) if params[:category].present?
+    @categories = Category.all
 
-    case params[:sort]
-    when "oldest"
-      @memos = @memos.oldest
-    when "title_asc"
-      @memos = @memos.title_asc
-    when "title_desc"
-      @memos = @memos.title_desc
-    else
-      @memos = @memos.recent
+    # 子どもに紐づくメモを取得
+    @memos = @child.memos.order(created_at: :desc)
+
+    # カテゴリでの絞り込み
+    if params[:category_id].present?
+      @memos = @memos.where(category_id: params[:category_id])
     end
   end
 
+  def show
+  end
+
   def new
-    @memo = current_child.memos.build
+    @memo = @child.memos.new
   end
 
   def create
-    @memo = current_child.memos.build(memo_params)
+    @memo = @child.memos.new(memo_params)
     if @memo.save
-      if params[:return_to_dashboard]
-        redirect_to child_dashboard_path, notice: "\u30E1\u30E2\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F"
-      else
-        redirect_to child_memos_path(current_child), notice: "\u30E1\u30E2\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F"
-      end
+      # リダイレクト先を child_memo_path に修正
+      redirect_to child_memo_path(@child, @memo), notice: "メモを作成しました。"
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
 
@@ -41,34 +39,45 @@ class MemosController < ApplicationController
 
   def update
     if @memo.update(memo_params)
-      if params[:return_to_dashboard]
-        redirect_to child_dashboard_path, notice: "\u30E1\u30E2\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F"
-      else
-        redirect_to child_memos_path(current_child), notice: "\u30E1\u30E2\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F"
-      end
+      # リダイレクト先を child_memo_path に修正
+      redirect_to child_memo_path(@child, @memo), notice: "メモを更新しました。"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
   def destroy
     @memo.destroy
-    redirect_to child_memos_path(current_child), notice: "\u30E1\u30E2\u3092\u524A\u9664\u3057\u307E\u3057\u305F"
-  end
-
-  def delete_image
-    image = @memo.images.find(params[:image_id])
-    image.purge
-    redirect_to edit_child_memo_path(current_child, @memo), notice: "\u753B\u50CF\u3092\u524A\u9664\u3057\u307E\u3057\u305F"
+    # リダイレクト先を child_memos_path に修正
+    redirect_to child_memos_path(@child), notice: "メモを削除しました。"
   end
 
   private
 
   def set_memo
-    @memo = current_child.memos.find(params[:id])
+    # ここも修正が必要な場合がありますが、今回は params[:id] でメモを特定できると仮定します。
+    # もし child_id も必要なら @child.memos.find(params[:id]) のように変更します。
+    @memo = Memo.find(params[:id])
+  end
+
+  def set_child
+    if child_signed_in?
+      @child = current_child
+    elsif parent_signed_in?
+      # 保護者が見る場合は URL の child_id から子どもを特定
+      @child = Child.find(params[:child_id])
+    else
+      redirect_to root_path, alert: "不正なアクセスです"
+    end
   end
 
   def memo_params
-    params.require(:memo).permit(:title, :body, :category, images: [])
+    params.require(:memo).permit(:title, :body, :category_id, images: [])
+  end
+
+  def authenticate_child_or_parent!
+    unless child_signed_in? || parent_signed_in?
+      redirect_to root_path, alert: "ログインしてください"
+    end
   end
 end

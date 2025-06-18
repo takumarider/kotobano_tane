@@ -1,10 +1,12 @@
 class CommentsController < ApplicationController
   before_action :authenticate_parent!
-  before_action :set_memo
-  before_action :set_comment, only: [ :edit, :update, :destroy ]
+  before_action :set_child_and_memo
 
   def new
-    @comment = @memo.comments.build
+    @child = Child.find(params[:child_id])
+    @memo = @child.memos.find(params[:memo_id])
+    @comment = Comment.new
+    @templates = CommentTemplate.all
   end
 
   def create
@@ -12,36 +14,17 @@ class CommentsController < ApplicationController
     @comment.parent = current_parent
 
     if @comment.save
-      redirect_to parent_dashboard_path, notice: "\u30B3\u30E1\u30F3\u30C8\u3092\u6295\u7A3F\u3057\u307E\u3057\u305F"
+      redirect_to parent_dashboard_path, notice: "コメントを投稿しました。"
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
-  end
-
-  def edit
-  end
-
-  def update
-    if @comment.update(comment_params)
-      redirect_to parent_dashboard_path, notice: "\u30B3\u30E1\u30F3\u30C8\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F"
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    @comment.destroy
-    redirect_to parent_dashboard_path, notice: "\u30B3\u30E1\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3057\u305F"
   end
 
   private
 
-  def set_memo
-    @memo = Memo.find(params[:memo_id])
-  end
-
-  def set_comment
-    @comment = @memo.comments.find(params[:id])
+  def set_child_and_memo
+    @child = Child.find(params[:child_id])
+    @memo = @child.memos.find(params[:memo_id])
   end
 
   def comment_params

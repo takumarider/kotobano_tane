@@ -1,0 +1,30 @@
+<h1>こどもログイン</h1>
+
+<% if flash.now[:alert] %>
+   <div class="custom-error-message">
+   <%= flash.now[:alert] %>
+  </div>
+<% end %>
+
+<div class="form-container">
+  <%= form_with url: child_sessions_path, data: { turbo: false } do |form|  %>
+    <div class="form-input">
+      <%= label_tag :name, "名前" %>
+      <%= text_field_tag :name, nil, class: 'form-control' %>
+    </div>
+
+    <div class="form-input">
+      <%= label_tag :birthday, "生年月日" %>
+      <%= date_select :birthday, :birthday, start_year: 2000, end_year: Date.today.year, class: 'form-control' %>
+    </div>
+
+    <div class="form-input">
+      <%= label_tag :age, "年齢" %>
+      <%= number_field_tag :age, nil, min: 0, class: 'form-control' %>
+    </div>
+
+    <div class="form-input button-container">
+      <%= submit_tag "ログイン", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,17 @@
+<h1>マイページ</h1>
+
+<h2>登録済みの子どもたち</h2>
+<ul>
+  <% @children.each do |child| %>
+    <li>
+      <%= child.name %> (生年月日: <%= child.birthday %>)
+      <%= link_to "削除", parent_child_path(@parent, child),  data: { turbo_method: :delete, confirm: "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger ml-2" %>
+    </li>
+  <% end %>
+</ul>
+
+<div class="button-container mt-4">
+  <%= link_to "新しい子どもを追加", new_parent_child_path(@parent), class: "btn btn-outline-success" %>
+</div>
+
+ <%= link_to "ダッシュボードにもどる💨", parent_dashboard_path, class: "btn btn-primary" %>

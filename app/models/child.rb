@@ -4,5 +4,13 @@ class Child < ApplicationRecord
 
   validates :name, presence: true
   validates :birthday, presence: true
-  validates :age, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  def age
+    return nil unless birthday.present?
+
+    today = Date.today
+    age = today.year - birthday.year
+    age -= 1 if today < birthday + age.years
+    age
+  end
 end

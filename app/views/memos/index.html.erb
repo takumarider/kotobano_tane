@@ -1,52 +1,35 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">メモ一覧</h1>
-    <%= link_to '新しいメモを作成', new_child_memo_path(current_child), class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' %>
+<h1><%= @child.name %> のメモボックス</h1>
+
+<%= form_with url: child_memos_path(@child), method: :get, local: true do %>
+  <div style="margin-bottom: 20px;">
+    <%= label_tag :category_id, "さがしたいときはカテゴリーをえらんで🔍" %>
+    <%= select_tag :category_id,
+        options_from_collection_for_select(@categories || [], :id, :name, params[:category_id]),
+        include_blank: "すべて" %>
+    <%= submit_tag "🔍" %>
   </div>
+<% end %>
 
-  <div class="flex flex-wrap gap-4">
-    <% @memos.each do |memo| %>
-      <div class="flex-1 min-w-[300px] max-w-[400px] bg-white rounded-lg shadow-md p-4">
-        <div class="flex flex-col h-full">
-          <div class="flex-grow">
-            <h2 class="text-xl font-semibold mb-2"><%= memo.title %></h2>
-            <p class="text-gray-600 mb-2">カテゴリ: <%= memo.category %></p>
-            <p class="text-gray-700 mb-4"><%= truncate(memo.body, length: 100) %></p>
-            
-            <% if memo.images.attached? %>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <% memo.images.each do |image| %>
-                  <div class="w-20 h-20">
-                    <%= image_tag image, class: 'w-full h-full object-cover rounded' %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-
-            <% if memo.comments.any? %>
-              <div class="mt-4 space-y-2">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">保護者からのコメント</h3>
-                <% memo.comments.each do |comment| %>
-                  <div class="bg-gray-50 rounded p-3">
-                    <p class="text-sm text-gray-700"><%= comment.body %></p>
-                    <p class="text-xs text-gray-500 mt-1">
-                      <%= l comment.created_at, format: :short %>
-                    </p>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-
-          <div class="flex justify-between items-center mt-auto pt-4 border-t">
-            <span class="text-sm text-gray-500"><%= l memo.created_at, format: :short %></span>
-            <div class="space-x-2">
-              <%= link_to '編集', edit_child_memo_path(current_child, memo), class: 'text-blue-500 hover:text-blue-700' %>
-              <%= button_to '削除', child_memo_path(current_child, memo), method: :delete, class: 'text-red-500 hover:text-red-700', data: { confirm: '本当に削除しますか？' } %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
+<% if child_signed_in? %>
+  <div class="button-container">
+    <%= link_to "NEWメモ🗒️", new_child_memo_path(@child), class: "btn btn-primary" %>
   </div>
-</div> 
+<% end %>
+
+<ul class="memo-list">
+  <% @memos.each do |memo| %>
+    <li class="memo-card">
+      <strong><%= memo.title.presence || "（タイトルなし）" %></strong><br>
+
+      <%= link_to memo.body.truncate(20), child_memo_path(@child, memo) %><br>
+
+      <% if memo.images.attached? %>
+        <%= image_tag memo.images.first.variant(resize_to_limit: [200, 200]) %><br>
+      <% end %>
+
+      <% if memo.category.present? %>
+        <p><%= memo.category.name %></p>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

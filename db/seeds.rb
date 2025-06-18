@@ -1,9 +1,24 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# カテゴリーの作成（重複防止のため find_or_create_by を使用）
+categories = [
+  "日記",
+  "学んだことをまとめよう",
+  "今の気持ちはどう？",
+  "ひらめいた！！"
+]
+
+categories.each do |name|
+  Category.find_or_create_by!(name: name)
+end
+
+# 親ユーザーを取得または作成
+parent = Parent.find_or_create_by!(email: 'parent@example.com') do |p|
+  p.password = 'password'
+end
+
+# コメントテンプレート作成
+CommentTemplate.create!([
+  { title: "褒める", content: "とてもよくできました！", parent: parent },
+  { title: "励ます", content: "あと少し！がんばりましょう！", parent: parent },
+  { title: "応援する", content: "君にしかできないことだ！", parent: parent },
+  { title: "提案する", content: "調べたことをそのままAIに聞いてみて。もっと教えてくれるよ", parent: parent }
+])

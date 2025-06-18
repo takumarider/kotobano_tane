@@ -1,55 +1,66 @@
-<div class="max-w-4xl mx-auto">
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">コトバのタネ</h1>
-    <p class="text-xl text-gray-600">
-      子どもが自由に言葉を記録し、保護者が見守りコメントできる学習メモアプリ
+<h1>ログインを選んでください</h1>
+
+<!-- ▼ アプリの紹介（固定表示） -->
+<div class="app-intro" style="margin-top: 2em;">
+  <h2>🌱 コトバのタネとは？</h2>
+  <p>
+    子どもが毎日の気づきや学びを、自由に「言葉」で残せるメモアプリです。<br>
+    保護者は、そのメモにコメントを返して関わることで、子どもの「考える力」「伝える力」を育みます。<br>
+    そんな日々の小さな不安を、記録と対話で解決できると信じています。
+  </p>
+</div>
+
+<!-- ▼ 子ども向け／保護者向けの言葉（タブ切り替え） -->
+<div class="user-intro" style="margin-top: 2em;">
+  <h2>💬 ことばをそだてる ふたつの しかた</h2>
+
+  <div class="intro-buttons">
+    <button onclick="showIntro('child')" class="intro-tab active" id="child-tab">子ども向け</button>
+    <button onclick="showIntro('parent')" class="intro-tab" id="parent-tab">保護者向け</button>
+  </div>
+
+  <!-- 子ども向け -->
+  <div id="child-intro" class="intro-content">
+    <h3>きみの「ことば」が、ぐんぐんそだつ！</h3>
+    <p>
+      「コトバのタネ」は、きみの思ったこと・がんばったこと・おもしろかったことを、<br>
+      じゆうにメモできるアプリだよ。そのメモを見て、おうちの人がコメントでこたえてくれるから、もっと考えるのがたのしくなる！<br>
+      たくさん書いて、たくさん話そう！ことばのちからがどんどん強くなるよ🌟
     </p>
   </div>
 
-  <div class="grid md:grid-cols-2 gap-8 mb-12">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">保護者の方へ</h2>
-      <p class="text-gray-600 mb-4">
-        お子様の言葉の成長を見守り、温かいコメントで応援しましょう。
-      </p>
-      <div class="space-y-4">
-        <%= link_to "保護者ログイン", new_parent_session_path, class: "block w-full text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" %>
-        <%= link_to "新規登録", new_parent_registration_path, class: "block w-full text-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
-      </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">お子様へ</h2>
-      <p class="text-gray-600 mb-4">
-        感じたことや学んだことを自由にメモに残しましょう。
-      </p>
-      <div class="space-y-4">
-        <%= link_to "子どもログイン", new_children_session_path, class: "block w-full text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700" %>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-gray-50 p-6 rounded-lg">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">アプリケーションの特徴</h2>
-    <ul class="space-y-4">
-      <li class="flex items-start">
-        <svg class="h-6 w-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        <span class="text-gray-600">子どもが簡単にログインできる（名前と誕生日のみ）</span>
-      </li>
-      <li class="flex items-start">
-        <svg class="h-6 w-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        <span class="text-gray-600">保護者が温かく見守り、コメントで応援</span>
-      </li>
-      <li class="flex items-start">
-        <svg class="h-6 w-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        <span class="text-gray-600">語彙力・表現力・定義力の成長を支援</span>
-      </li>
-    </ul>
+  <!-- 保護者向け -->
+  <div id="parent-intro" class="intro-content" style="display: none;">
+    <h3>言葉のタネに、水をあげるように。</h3>
+    <p>
+      このアプリは、お子さまが日々の生活や学びの中で感じたことを「メモ」として残し、<br>
+      それに対して保護者がコメントを返すことで、思考や表現の芽を育てるツールです。<br><br>
+      子どもたちの言葉は、まだ小さなタネ。<br>
+      でも、その一言に込められた思いや考えは、しっかりと聞き届け、寄り添ってあげることで、大きく育ちます。<br><br>
+      あなたのコメントが、お子さまにとっての「水」になります。<br>
+      
+    </p>
   </div>
 </div>
+
+<!-- ▼ 切り替え用JavaScript -->
+<script>
+  function showIntro(type) {
+    const childIntro = document.getElementById("child-intro");
+    const parentIntro = document.getElementById("parent-intro");
+    const childTab = document.getElementById("child-tab");
+    const parentTab = document.getElementById("parent-tab");
+
+    if (type === "child") {
+      childIntro.style.display = "block";
+      parentIntro.style.display = "none";
+      childTab.classList.add("active");
+      parentTab.classList.remove("active");
+    } else {
+      childIntro.style.display = "none";
+      parentIntro.style.display = "block";
+      childTab.classList.remove("active");
+      parentTab.classList.add("active");
+    }
+  }
+</script>

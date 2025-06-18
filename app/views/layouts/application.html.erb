@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Kotobano Tane" %></title>
+    <title><%= content_for(:title) || " KOTOBANOTANE" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -10,51 +10,41 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <header class="bg-white shadow">
-      <nav class="container mx-auto px-4 py-3">
-        <div class="flex justify-between items-center">
-          <%= link_to "コトバのタネ", root_path, class: "text-xl font-bold text-gray-800" %>
-          <div class="flex items-center space-x-4">
-            <% if parent_signed_in? %>
-              <%= link_to "ダッシュボード", parent_dashboard_path, class: "text-gray-600 hover:text-gray-900" %>
-              <%= button_to "ログアウト", destroy_parent_session_path, method: :delete, data: { turbo: false }, class: "text-gray-600 hover:text-gray-900" %>
-            <% elsif child_signed_in? %>
-              <%= link_to "ダッシュボード", child_dashboard_path, class: "text-gray-600 hover:text-gray-900" %>
-              <%= button_to "ログアウト", children_session_path, method: :delete, data: { turbo: false }, class: "text-gray-600 hover:text-gray-900" %>
-            <% else %>
-              <%= link_to "保護者ログイン", new_parent_session_path, class: "text-gray-600 hover:text-gray-900" %>
-              <%= link_to "子どもログイン", new_children_session_path, class: "text-gray-600 hover:text-gray-900" %>
-            <% end %>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <header class="header-wrapper">
+    <nav class="login-button-wrapper">
+    <% if parent_signed_in? %>
+      <span class="login-status">保護者としてログイン中</span>
+      <%= link_to "保護者ダッシュボード", parent_dashboard_path, class: "btn btn-outline-primary" %>
+      <%= link_to "マイページ", parent_path(current_parent), class: "btn btn-outline-success" %>
+      <%= link_to "ログアウト", destroy_parent_session_path, data: { turbo_method: :delete }, class: "btn btn-outline-danger" %>
 
-    <main class="container mx-auto px-4 py-8">
-      <% if notice %>
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          <%= notice %>
-        </div>
-      <% end %>
-      <% if alert %>
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <%= alert %>
-        </div>
-      <% end %>
+    <% elsif session[:child_id].present? && Child.exists?(session[:child_id]) %>
+      <span class="login-status">子どもとしてログイン中</span>
+      <%= link_to "子どもダッシュボード", child_dashboard_path, class: "btn btn-outline-primary" %>
+      <%= link_to "ログアウト", child_sessions_path, data: { turbo_method: :delete }, class: "btn btn-outline-danger" %>
+
+    <% else %>
+      <%= link_to "子どもとしてログイン", new_child_sessions_path, class: "btn btn-primary" %>
+      <%= link_to "保護者としてログイン", new_parent_session_path, class: "btn btn-secondary" %>
+    <% end %>
+  </nav>
+</header>
+
+
+    <main style="padding: 20px;">
       <%= yield %>
     </main>
+
+
   </body>
 </html>
