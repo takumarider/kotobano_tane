@@ -20,6 +20,10 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-  # 以下は念のため明示
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+  # Action Cable（solid_cable）用設定を追加
+  cable:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
