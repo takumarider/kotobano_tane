@@ -22,3 +22,11 @@ CommentTemplate.create!([
   { title: "応援する", content: "君にしかできないことだ！", parent: parent },
   { title: "提案する", content: "調べたことをそのままAIに聞いてみて。もっと教えてくれるよ", parent: parent }
 ])
+
+# db/seeds.rb
+
+User.create!(
+  email: 'test@example.com',
+  password: 'password123',
+  password_confirmation: 'password123',
+)

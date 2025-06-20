@@ -5,5 +5,5 @@ class Parent < ApplicationRecord
   has_many :children, dependent: :destroy
   has_many :comments, dependent: :destroy
 
-  validates :name, presence: true
+  # validates :name, presence: true
 end
