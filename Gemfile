@@ -72,3 +72,6 @@ group :test do
   gem "shoulda-matchers"
 end
   gem "image_processing"
+  group :production do
+  gem "pg"
+end
