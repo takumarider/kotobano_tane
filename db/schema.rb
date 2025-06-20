@@ -11,7 +11,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
-  create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -21,7 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", charset: "utf8mb3", force: :cascade do |t|
+  create_table "active_storage_blobs", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,19 +36,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", force: :cascade do |t|
+  create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "categories", charset: "utf8mb3", force: :cascade do |t|
+  create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "children", charset: "utf8mb3", force: :cascade do |t|
+  create_table "children", force: :cascade do |t|
     t.string "name"
     t.date "birthday"
     t.integer "age"
@@ -55,7 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["parent_id"], name: "index_children_on_parent_id"
   end
 
-  create_table "comment_templates", charset: "utf8mb3", force: :cascade do |t|
+  create_table "comment_templates", force: :cascade do |t|
     t.bigint "parent_id", null: false
     t.string "title"
     t.text "content"
@@ -64,7 +67,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["parent_id"], name: "index_comment_templates_on_parent_id"
   end
 
-  create_table "comments", charset: "utf8mb3", force: :cascade do |t|
+  create_table "comments", force: :cascade do |t|
     t.bigint "memo_id", null: false
     t.bigint "parent_id", null: false
     t.text "body"
@@ -74,7 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
 
-  create_table "memos", charset: "utf8mb3", force: :cascade do |t|
+  create_table "memos", force: :cascade do |t|
     t.bigint "child_id", null: false
     t.string "title"
     t.text "body"
@@ -85,7 +88,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_141014) do
     t.index ["child_id"], name: "index_memos_on_child_id"
   end
 
-  create_table "parents", charset: "utf8mb3", force: :cascade do |t|
+  create_table "parents", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

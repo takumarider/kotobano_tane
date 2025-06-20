@@ -1,8 +1,8 @@
 default: &default
-  adapter: mysql2
-  encoding: utf8mb4
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV['DB_USERNAME'] || 'root' %>
+  username: <%= ENV['DB_USERNAME'] || 'postgres' %>
   password: <%= ENV['DB_PASSWORD'] || '' %>
   host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
 
@@ -11,18 +11,11 @@ development:
   database: kotobano_tane_development
 
 test:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV['TEST_DB_USERNAME'] || 'postgres' %>
-  password: <%= ENV['TEST_DB_PASSWORD'] || '' %>
-  host: <%= ENV['TEST_DB_HOST'] || '127.0.0.1' %>
+  <<: *default
   database: kotobano_tane_test
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <<: *default
   username: <%= ENV['PROD_DB_USERNAME'] %>
   password: <%= ENV['PROD_DB_PASSWORD'] %>
   host: <%= ENV['PROD_DB_HOST'] %>

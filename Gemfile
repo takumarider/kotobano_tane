@@ -17,8 +17,9 @@ gem "devise"
 gem "thruster", require: false
 gem "image_processing"
 
+gem "pg" # ← ここを全環境で使うように移動
+
 group :development, :test do
-  gem "mysql2", "~> 0.5"
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
@@ -26,6 +27,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "rails-controller-testing"
+  # gem "mysql2" は削除 or コメントアウト
 end
 
 group :development do
@@ -39,5 +41,5 @@ group :test do
 end
 
 group :production do
-  gem "pg"
+  # pgはここから外して全環境で使うので空でOK
 end
