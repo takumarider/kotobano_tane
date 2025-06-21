@@ -21,10 +21,15 @@ Rails.application.configure do
   config.silence_healthcheck_path = "/up"
 
   config.active_support.report_deprecations = false
-  config.cache_store = :solid_cache_store
 
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  # キャッシュストアをメモリに変更（SolidQueueを外す）
+  config.cache_store = :memory_store
+
+  # ActiveJobのキューアダプターもasyncに変更（本番用途ならSidekiqやResque推奨）
+  config.active_job.queue_adapter = :async
+
+  # SolidQueueの接続設定はコメントアウトまたは削除
+  # config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: "example.com" }
@@ -39,6 +44,7 @@ Rails.application.configure do
   # Action Cable の Redis 設定
   config.action_cable.url = ENV["REDIS_URL"]
   config.action_cable.allowed_request_origins = [
-    /https?:\/\/.*/  # 本番では制限推奨
+    # 本番では特定のドメインに限定してください
+    /https?:\/\/example\.com/
   ]
 end
