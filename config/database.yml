@@ -21,3 +21,10 @@ production:
   password: <%= ENV['PROD_DB_PASSWORD'] %>
   host: <%= ENV['PROD_DB_HOST'] %>
   database: <%= ENV['PROD_DB_NAME'] %>
+
+cache:
+  <<: *default
+  username: <%= ENV['PROD_DB_USERNAME'] %>
+  password: <%= ENV['PROD_DB_PASSWORD'] %>
+  host: <%= ENV['PROD_DB_HOST'] %>
+  database: <%= ENV['PROD_CACHE_DB_NAME'] || 'kotobano_tane_cache_production' %>
