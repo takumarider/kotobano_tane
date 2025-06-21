@@ -9,31 +9,36 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
   # config.asset_host = "http://assets.example.com"
+
   config.active_storage.service = :local
   config.assume_ssl = true
   config.force_ssl = true
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
   config.log_tags = [ :request_id ]
-  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.silence_healthcheck_path = "/up"
+
   config.active_support.report_deprecations = false
   config.cache_store = :solid_cache_store
+
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
+
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: "example.com" }
   # config.action_mailer.smtp_settings = { ... }
+
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
   # config.hosts = [ ... ]
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  # ここからAction CableのRedis設定を追加
+  # Action Cable の Redis 設定
   config.action_cable.url = ENV["REDIS_URL"]
   config.action_cable.allowed_request_origins = [
-    # 必要に応じて許可したいドメインをここに追加してください
-    /https?:\/\/.*/  # 全てのhttp/httpsドメインを許可（本番用は制限推奨）
+    /https?:\/\/.*/  # 本番では制限推奨
   ]
 end
