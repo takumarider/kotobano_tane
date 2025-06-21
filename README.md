@@ -117,7 +117,7 @@
 
 ## 開発環境
 * フレームワーク：Ruby on Rails 7.x
-* DB：MySQL
+* DB：PostgreSQL
 * フロントエンド：Hotwire（Turbo/Stimulus）
 * ユーザー認証：Devise
 * セッション管理：Railsセッション（子ども）
