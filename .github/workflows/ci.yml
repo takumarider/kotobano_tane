@@ -1,10 +1,9 @@
-name: CI
+name: Rails CI
 
 on:
   push:
     branches:
       - main
-      - master
   pull_request:
 
 jobs:
@@ -14,56 +13,44 @@ jobs:
     services:
       postgres:
         image: postgres:13
+        ports: ['5432:5432']
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password  # 明示的なパスワード
+          POSTGRES_PASSWORD: password
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     env:
-      TEST_DB_USERNAME: postgres
-      TEST_DB_PASSWORD: password  # サービスのパスワードと一致させる
-      TEST_DB_HOST: postgres
       RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_HOST: postgres
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2
           bundler-cache: true
 
-      - name: Install PostgreSQL client library
-        run: sudo apt-get update && sudo apt-get install -y libpq-dev
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
 
-      - name: Wait for PostgreSQL to be ready
+      - name: Wait for PostgreSQL
         run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..10}; do
-            pg_isready -h postgres -U postgres && break
-            echo "Waiting..."
-            sleep 3
+          until pg_isready -h $DB_HOST -U $DB_USERNAME; do
+            echo "Waiting for Postgres..."
+            sleep 1
           done
 
-      - name: Create test database
-        run: bin/rails db:create
-
-      - name: Run migrations
-        run: bin/rails db:migrate
+      - name: Set up database
+        run: |
+          bundle exec rake db:create --trace
+          bundle exec rake db:schema:load
 
       - name: Run tests
-        run: bundle exec rspec --format documentation
-
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+        run: bundle exec rails test
