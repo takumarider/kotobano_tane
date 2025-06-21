@@ -1,61 +1,71 @@
- test:
-  runs-on: ubuntu-latest
+name: CI
 
-  services:
-    postgres:
-      image: postgres:13
-      env:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: ""
-      ports:
-        - 5432:5432
-      options: >-
-        --health-cmd pg_isready
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
 
-  env:
-    TEST_DB_USERNAME: postgres
-    TEST_DB_PASSWORD: ""
-    TEST_DB_HOST: 127.0.0.1
-    RAILS_ENV: test
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: .ruby-version
-        bundler-cache: true
+    env:
+      TEST_DB_USERNAME: postgres
+      TEST_DB_PASSWORD: ""
+      TEST_DB_HOST: postgres
+      RAILS_ENV: test
 
-    - name: Install PostgreSQL client library
-      run: sudo apt-get update && sudo apt-get install -y libpq-dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Wait for PostgreSQL to be ready
-      run: |
-        echo "Waiting for PostgreSQL to be ready..."
-        for i in {1..10}; do
-          pg_isready -h 127.0.0.1 -U postgres && break
-          echo "Waiting..."
-          sleep 3
-        done
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.0
+          bundler-cache: true
 
-    - name: Create test database
-      run: bin/rails db:create
+      - name: Install PostgreSQL client library
+        run: sudo apt-get update && sudo apt-get install -y libpq-dev
 
-    - name: Run migrations
-      run: bin/rails db:migrate
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..10}; do
+            pg_isready -h postgres -U postgres && break
+            echo "Waiting..."
+            sleep 3
+          done
 
-    - name: Run tests
-      run: bundle exec rspec --format documentation
+      - name: Create test database
+        run: bin/rails db:create
 
-    - name: Keep screenshots from failed system tests
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: screenshots
-        path: ${{ github.workspace }}/tmp/screenshots
-        if-no-files-found: ignore
+      - name: Run migrations
+        run: bin/rails db:migrate
+
+      - name: Run tests
+        run: bundle exec rspec --format documentation
+
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/tmp/screenshots
+          if-no-files-found: ignore
