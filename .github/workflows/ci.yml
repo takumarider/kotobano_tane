@@ -16,7 +16,7 @@ jobs:
         image: postgres:13
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: your_password_here   # ここは空にしない！
+          POSTGRES_PASSWORD: password  # 明示的なパスワード
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -25,7 +25,7 @@ jobs:
 
     env:
       TEST_DB_USERNAME: postgres
-      TEST_DB_PASSWORD: your_password_here      # サービスのパスワードと合わせる
+      TEST_DB_PASSWORD: password  # サービスのパスワードと一致させる
       TEST_DB_HOST: postgres
       RAILS_ENV: test
 
