@@ -42,14 +42,17 @@ jobs:
 
       - name: Wait for PostgreSQL
         run: |
+          echo "Waiting for PostgreSQL to become available..."
           until pg_isready -h $DB_HOST -U $DB_USERNAME; do
-            echo "Waiting for Postgres..."
+            echo "PostgreSQL is unavailable - waiting..."
             sleep 1
           done
+          echo "PostgreSQL is ready!"
+          sleep 5  # ★Postgresが安定するまで少し待つ
 
       - name: Set up database
         run: |
-          bundle exec rake db:create --trace
+          bundle exec rake db:create
           bundle exec rake db:schema:load
 
       - name: Run tests
