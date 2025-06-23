@@ -9,11 +9,11 @@ default: &default
 
 development:
   <<: *default
-  database: kotobano_tane_development
+  database: <%= ENV['DB_NAME_DEVELOPMENT'] || 'kotobano_tane_development' %>
 
 test:
   <<: *default
-  database: kotobano_tane_test
+  database: <%= ENV['DB_NAME_TEST'] || 'kotobano_tane_test' %>
 
 production:
   <<: *default
